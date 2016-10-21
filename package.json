@@ -1,0 +1,16 @@
+{
+  "name": "granary-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "hapi": "^15.1.1",
+    "hapi-auth-jwt2": "^7.1.3"
+  }
+}
