@@ -14,17 +14,17 @@ const server = new Hapi.Server({
 
 const db = require('knex')({
   client: 'pg',
-  connection: process.env.pg_conn_string,
+  connection: process.env.DATABASE_URL,
   migrations: {
     tableName: 'migrations'
   }
 });
 
-server.connection({port: process.env.port});
+server.connection({port: process.env.PORT});
 
 server.register(require('hapi-auth-jwt2'), function (err) {
   server.auth.strategy('jwt', 'jwt', {
-    key: new Buffer(process.env.auth0_secret, 'base64') ,
+    key: new Buffer(process.env.AUTH0_SECRET, 'base64') ,
     validateFunc: function (decoded, request, callback) {
       if (decoded) {
         callback(null, true);
@@ -34,7 +34,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     },
     verifyOptions: {
       algorithms: ['HS256'],
-      audience: process.env.auth0_client_id
+      audience: process.env.AUTH0_CLIENT_ID
     }
   });
 
