@@ -110,6 +110,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       return db('projects')
         .returning('id')
         .update({
+          name: data.name,
           updated_at: db.fn.now(),
           data: data
         })
