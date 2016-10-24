@@ -1,4 +1,3 @@
-const config = require('./local.js');
 const Hapi = require('hapi');
 const Boom = require('boom');
 
@@ -15,17 +14,17 @@ const server = new Hapi.Server({
 
 const db = require('knex')({
   client: 'pg',
-  connection: config.pg_conn_string,
+  connection: process.env.pg_conn_string,
   migrations: {
     tableName: 'migrations'
   }
 });
 
-server.connection({port: 3999});
+server.connection({port: process.env.port});
 
 server.register(require('hapi-auth-jwt2'), function (err) {
   server.auth.strategy('jwt', 'jwt', {
-    key: new Buffer(config.auth0_secret, 'base64') ,
+    key: new Buffer(process.env.auth0_secret, 'base64') ,
     validateFunc: function (decoded, request, callback) {
       if (decoded) {
         callback(null, true);
@@ -35,7 +34,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     },
     verifyOptions: {
       algorithms: ['HS256'],
-      audience: config.auth0_client_id
+      audience: process.env.auth0_client_id
     }
   });
 
