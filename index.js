@@ -107,6 +107,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     handler: function (req, res) {
       const data = req.payload;
       return db('projects')
+        .where('id', req.params.id)
         .returning('id')
         .update({
           name: data.name,
