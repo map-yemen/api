@@ -7,7 +7,7 @@ const server = new Hapi.Server({
       cors: {
         origin: ['*'],
         additionalHeaders: ['x-requested-with']
-      }    
+      }
     }
   }
 });
@@ -140,10 +140,109 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     }
   })
 
+  /* Get all indicators */
+  server.route({
+    method: 'GET',
+    path: '/indicators',
+    config: {auth: false},
+    handler: function (req, res) {
+      return db('indicators').select('id', 'name').then(res);
+    }
+  });
+
+  /* Create a new indicator */
+  server.route({
+    method: 'POST',
+    path: '/indicators',
+    config: {auth: 'jwt'},
+    handler: function (req, res) {
+      const data = req.payload;
+      const owner = req.auth.credentials.sub;
+      const name = data.name;
+
+      if (!owner || !data || !name) {
+        return res(Boom.badData('Bad data'));
+      }
+
+      return db('indicators')
+        .returning('id')
+        .insert({
+          data: data,
+          owner: owner,
+          name: name,
+          created_at: db.fn.now(),
+          updated_at: db.fn.now()
+        }).then(function (ret) {
+          return res({id: ret[0]});
+        })
+        .catch(function (err) {
+          console.error(err);
+          return res(Boom.badImplementation('Internal Server Error - Could not add data'))
+        });
+    }
+    });
+
+  /* Get a single indicator */
+  server.route({
+    method: 'GET',
+    path: '/indicators/{id}',
+    config: {auth: false},
+    handler: function (req, res) {
+      return db('indicators')
+        .select()
+        .where('id', req.params.id)
+        .then((ret) => res(ret[0]))
+        .catch(function (err) {
+          console.error(err);
+          return res(Boom.badImplementation('Internal Server Error - Could not find data'))
+        });
+    }
+  });
+
+  /* Update a single indicator */
+  server.route({
+    method: 'PUT',
+    path: '/indicators/{id}',
+    config: {auth: 'jwt'},
+    handler: function (req, res) {
+      const data = req.payload;
+      return db('indicators')
+        .where('id', req.params.id)
+        .returning('id')
+        .update({
+          name: data.name,
+          updated_at: db.fn.now(),
+          data: data
+        })
+        .then((ret) => res({id: ret[0]}))
+        .catch(function (err) {
+          console.error(err);
+          return res(Boom.badImplementation('Internal Server Error - Could not update data'))
+        });
+      ;
+    }
+  });
+
+  /* Delete a single indicator */
+  server.route({
+    method: 'DELETE',
+    path: '/indicators/{id}',
+    config: {auth: 'jwt'},
+    handler: function (req, res) {
+      return db('indicators')
+        .where('id', req.params.id)
+        .del()
+        .then((ret) => res({id: req.params.id}))
+        .catch(function (err) {
+          console.error(err);
+          return res(Boom.badImplementation('Internal Server Error - Could not delete data'))
+        })
+    }
+  })
+
 });
 
 server.start((err) => {
   if (err) { throw err}
   console.log(`Server running at: ${server.info.uri}`);
 });
-
