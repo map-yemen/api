@@ -46,7 +46,11 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     path: '/projects',
     config: {auth: false},
     handler: function (req, res) {
-      return db('projects').select('id', 'name').then(res);
+      return db('projects')
+        .select('id', 'name', 'created_at', 'updated_at',
+          db.raw('data->\'category\' as categories'),
+          db.raw('data->\'location\' as location'))
+        .then(res);
     }
   });
 
@@ -146,7 +150,9 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     path: '/indicators',
     config: {auth: false},
     handler: function (req, res) {
-      return db('indicators').select('id', 'name').then(res);
+      return db('indicators')
+        .select('id', 'name', 'created_at', 'updated_at')
+        .then(res);
     }
   });
 
