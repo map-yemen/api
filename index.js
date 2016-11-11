@@ -241,6 +241,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
           owner: owner,
           name: name,
           private: data.private || false,
+          published: data.published || false,
           created_at: db.fn.now(),
           updated_at: db.fn.now()
         }).then(function (ret) {
@@ -303,6 +304,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .update({
           name: data.name,
           private: data.private || false,
+          published: data.published || false,
           updated_at: db.fn.now(),
           data: data
         })
