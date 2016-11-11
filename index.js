@@ -44,13 +44,22 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.route({
     method: 'GET',
     path: '/projects',
-    config: {auth: false},
+    config: {
+      auth: {
+        mode: 'optional'
+      }
+    },
     handler: function (req, res) {
-      return db('projects')
+      const query = db('projects')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'category\' as categories'),
-          db.raw('data->\'location\' as location'))
-        .then(res);
+          db.raw('data->\'location\' as location'));
+
+      if (!req.auth.isAuthenticated) {
+        return query.where('private', false).then(res);
+      } else {
+        return query.then(res);
+      }
     }
   });
 
