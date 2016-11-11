@@ -71,10 +71,15 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     handler: function (req, res) {
       const data = req.payload;
       const owner = req.auth.credentials.sub;
+      const roles = req.auth.credentials.roles;
       const name = data.name;
 
       if (!owner || !data || !name) {
         return res(Boom.badData('Bad data'));
+      }
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
       }
 
       return db('projects')
