@@ -157,6 +157,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     path: '/projects/{id}',
     config: {auth: 'jwt'},
     handler: function (req, res) {
+      const roles = req.auth.credentials.roles;
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
+      }
+
       return db('projects')
         .where('id', req.params.id)
         .del()
