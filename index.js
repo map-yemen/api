@@ -104,15 +104,25 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.route({
     method: 'GET',
     path: '/projects/{id}',
-    config: {auth: false},
+    config: {
+      auth: {
+        mode: 'optional'
+      }
+    },
     handler: function (req, res) {
       return db('projects')
         .select()
         .where('id', req.params.id)
-        .then((ret) => res(ret[0]))
+        .then(ret => {
+          if (req.auth.isAuthenticated || !ret[0].private) {
+            return res(ret[0]);
+          } else {
+            return res(Boom.unauthorized('Not authorized to perform this action'));
+          }
+        })
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not find data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not find data'));
         });
     }
   });
