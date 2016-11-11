@@ -44,13 +44,22 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.route({
     method: 'GET',
     path: '/projects',
-    config: {auth: false},
+    config: {
+      auth: {
+        mode: 'optional'
+      }
+    },
     handler: function (req, res) {
-      return db('projects')
+      const query = db('projects')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'category\' as categories'),
-          db.raw('data->\'location\' as location'))
-        .then(res);
+          db.raw('data->\'location\' as location'));
+
+      if (!req.auth.isAuthenticated) {
+        return query.where('private', false).then(res);
+      } else {
+        return query.then(res);
+      }
     }
   });
 
@@ -62,10 +71,15 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     handler: function (req, res) {
       const data = req.payload;
       const owner = req.auth.credentials.sub;
+      const roles = req.auth.credentials.roles;
       const name = data.name;
 
       if (!owner || !data || !name) {
         return res(Boom.badData('Bad data'));
+      }
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
       }
 
       return db('projects')
@@ -90,15 +104,25 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.route({
     method: 'GET',
     path: '/projects/{id}',
-    config: {auth: false},
+    config: {
+      auth: {
+        mode: 'optional'
+      }
+    },
     handler: function (req, res) {
       return db('projects')
         .select()
         .where('id', req.params.id)
-        .then((ret) => res(ret[0]))
+        .then(ret => {
+          if (req.auth.isAuthenticated || !ret[0].private) {
+            return res(ret[0]);
+          } else {
+            return res(Boom.unauthorized('Not authorized to perform this action'));
+          }
+        })
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not find data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not find data'));
         });
     }
   });
@@ -110,6 +134,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     config: {auth: 'jwt'},
     handler: function (req, res) {
       const data = req.payload;
+      const roles = req.auth.credentials.roles;
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
+      }
+
       return db('projects')
         .where('id', req.params.id)
         .returning('id')
@@ -133,6 +163,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     path: '/projects/{id}',
     config: {auth: 'jwt'},
     handler: function (req, res) {
+      const roles = req.auth.credentials.roles;
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
+      }
+
       return db('projects')
         .where('id', req.params.id)
         .del()
@@ -148,11 +184,20 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.route({
     method: 'GET',
     path: '/indicators',
-    config: {auth: false},
+    config: {
+      auth: {
+        mode: 'optional'
+      }
+    },
     handler: function (req, res) {
-      return db('indicators')
+      const query = db('indicators')
         .select('id', 'name', 'created_at', 'updated_at')
-        .then(res);
+
+      if (!req.auth.isAuthenticated) {
+        return query.where('private', false).then(res);
+      } else {
+        return query.then(res);
+      }
     }
   });
 
@@ -164,10 +209,15 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     handler: function (req, res) {
       const data = req.payload;
       const owner = req.auth.credentials.sub;
+      const roles = req.auth.credentials.roles;
       const name = data.name;
 
       if (!owner || !data || !name) {
         return res(Boom.badData('Bad data'));
+      }
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
       }
 
       return db('indicators')
@@ -192,12 +242,22 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.route({
     method: 'GET',
     path: '/indicators/{id}',
-    config: {auth: false},
+    config: {
+      auth: {
+        mode: 'optional'
+      }
+    },
     handler: function (req, res) {
       return db('indicators')
         .select()
         .where('id', req.params.id)
-        .then((ret) => res(ret[0]))
+        .then(ret => {
+          if (req.auth.isAuthenticated || !ret[0].private) {
+            return res(ret[0]);
+          } else {
+            return res(Boom.unauthorized('Not authorized to perform this action'));
+          }
+        })
         .catch(function (err) {
           console.error(err);
           return res(Boom.badImplementation('Internal Server Error - Could not find data'))
@@ -212,6 +272,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     config: {auth: 'jwt'},
     handler: function (req, res) {
       const data = req.payload;
+      const roles = req.auth.credentials.roles;
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
+      }
+
       return db('indicators')
         .where('id', req.params.id)
         .returning('id')
@@ -235,6 +301,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
     path: '/indicators/{id}',
     config: {auth: 'jwt'},
     handler: function (req, res) {
+      const roles = req.auth.credentials.roles;
+
+      if (roles.indexOf('edit') === -1) {
+        return res(Boom.unauthorized('Not authorized to perform this action'))
+      }
+
       return db('indicators')
         .where('id', req.params.id)
         .del()
