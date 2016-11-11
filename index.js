@@ -58,7 +58,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).then(res);
       } else {
-        return query.then(res);
+        return query.select('private').then(res);
       }
     }
   });
@@ -88,6 +88,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
           data: data,
           owner: owner,
           name: name,
+          private: data.private || false,
           created_at: db.fn.now(),
           updated_at: db.fn.now()
         }).then(function (ret) {
@@ -145,6 +146,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .returning('id')
         .update({
           name: data.name,
+          private: data.private || false,
           updated_at: db.fn.now(),
           data: data
         })
@@ -196,7 +198,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).then(res);
       } else {
-        return query.then(res);
+        return query.select('private').then(res);
       }
     }
   });
@@ -226,6 +228,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
           data: data,
           owner: owner,
           name: name,
+          private: data.private || false,
           created_at: db.fn.now(),
           updated_at: db.fn.now()
         }).then(function (ret) {
@@ -283,6 +286,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .returning('id')
         .update({
           name: data.name,
+          private: data.private || false,
           updated_at: db.fn.now(),
           data: data
         })
