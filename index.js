@@ -58,7 +58,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).then(res);
       } else {
-        return query.then(res);
+        return query.select('private').then(res);
       }
     }
   });
@@ -198,7 +198,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).then(res);
       } else {
-        return query.then(res);
+        return query.select('private').then(res);
       }
     }
   });
