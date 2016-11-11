@@ -62,7 +62,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       } else if (roles.indexOf('edit') === -1) {
         return query.where('published', true).select('private').then(res);
       } else {
-        return query.select('private').then(res);
+        return query.select('private', 'published').then(res);
       }
     }
   });
@@ -210,7 +210,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       } else if (roles.indexOf('edit') === -1) {
         return query.where('published', true).select('private').then(res);
       } else {
-        return query.select('private').then(res);
+        return query.select('private', 'published').then(res);
       }
     }
   });
