@@ -23,8 +23,9 @@ const db = require('knex')({
 server.connection({port: process.env.PORT});
 
 server.register(require('hapi-auth-jwt2'), function (err) {
+  console.error(err);
   server.auth.strategy('jwt', 'jwt', {
-    key: new Buffer(process.env.AUTH0_SECRET, 'base64') ,
+    key: new Buffer(process.env.AUTH0_SECRET, 'base64'),
     validateFunc: function (decoded, request, callback) {
       if (decoded) {
         callback(null, true);
@@ -50,13 +51,16 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       }
     },
     handler: function (req, res) {
+      const roles = req.auth.credentials.roles;
       const query = db('projects')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'category\' as categories'),
           db.raw('data->\'location\' as location'));
 
       if (!req.auth.isAuthenticated) {
-        return query.where('private', false).then(res);
+        return query.where('private', false).where('published', true).then(res);
+      } else if (roles.indexOf('edit') === -1) {
+        return query.where('published', true).select('private').then(res);
       } else {
         return query.select('private').then(res);
       }
@@ -79,7 +83,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       }
 
       if (roles.indexOf('edit') === -1) {
-        return res(Boom.unauthorized('Not authorized to perform this action'))
+        return res(Boom.unauthorized('Not authorized to perform this action'));
       }
 
       return db('projects')
@@ -89,6 +93,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
           owner: owner,
           name: name,
           private: data.private || false,
+          published: data.published || false,
           created_at: db.fn.now(),
           updated_at: db.fn.now()
         }).then(function (ret) {
@@ -96,10 +101,10 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         })
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not add data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not add data'));
         });
     }
-    });
+  });
 
   /* Get a single project */
   server.route({
@@ -115,7 +120,11 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .select()
         .where('id', req.params.id)
         .then(ret => {
-          if (req.auth.isAuthenticated || !ret[0].private) {
+          const roles = req.auth.credentials.roles;
+          if (roles.indexOf('edit') > -1 || // edit access can see everything
+             (!ret[0].private && ret[0].published) || // public and published
+             (req.auth.isAuthenticated && ret[0].private && ret[0].published) // also show authorized, private, published
+           ) {
             return res(ret[0]);
           } else {
             return res(Boom.unauthorized('Not authorized to perform this action'));
@@ -138,7 +147,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const roles = req.auth.credentials.roles;
 
       if (roles.indexOf('edit') === -1) {
-        return res(Boom.unauthorized('Not authorized to perform this action'))
+        return res(Boom.unauthorized('Not authorized to perform this action'));
       }
 
       return db('projects')
@@ -147,15 +156,15 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .update({
           name: data.name,
           private: data.private || false,
+          published: data.published || false,
           updated_at: db.fn.now(),
           data: data
         })
         .then((ret) => res({id: ret[0]}))
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not update data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not update data'));
         });
-      ;
     }
   });
 
@@ -168,7 +177,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const roles = req.auth.credentials.roles;
 
       if (roles.indexOf('edit') === -1) {
-        return res(Boom.unauthorized('Not authorized to perform this action'))
+        return res(Boom.unauthorized('Not authorized to perform this action'));
       }
 
       return db('projects')
@@ -177,10 +186,10 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .then((ret) => res({id: req.params.id}))
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not delete data'))
-        })
+          return res(Boom.badImplementation('Internal Server Error - Could not delete data'));
+        });
     }
-  })
+  });
 
   /* Get all indicators */
   server.route({
@@ -192,11 +201,14 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       }
     },
     handler: function (req, res) {
+      const roles = req.auth.credentials.roles;
       const query = db('indicators')
-        .select('id', 'name', 'created_at', 'updated_at')
+        .select('id', 'name', 'created_at', 'updated_at');
 
       if (!req.auth.isAuthenticated) {
-        return query.where('private', false).then(res);
+        return query.where('private', false).where('published', true).then(res);
+      } else if (roles.indexOf('edit') === -1) {
+        return query.where('published', true).select('private').then(res);
       } else {
         return query.select('private').then(res);
       }
@@ -219,7 +231,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       }
 
       if (roles.indexOf('edit') === -1) {
-        return res(Boom.unauthorized('Not authorized to perform this action'))
+        return res(Boom.unauthorized('Not authorized to perform this action'));
       }
 
       return db('indicators')
@@ -229,6 +241,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
           owner: owner,
           name: name,
           private: data.private || false,
+          published: data.published || false,
           created_at: db.fn.now(),
           updated_at: db.fn.now()
         }).then(function (ret) {
@@ -236,10 +249,10 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         })
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not add data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not add data'));
         });
     }
-    });
+  });
 
   /* Get a single indicator */
   server.route({
@@ -255,7 +268,11 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .select()
         .where('id', req.params.id)
         .then(ret => {
-          if (req.auth.isAuthenticated || !ret[0].private) {
+          const roles = req.auth.credentials.roles;
+          if (roles.indexOf('edit') > -1 || // edit access can see everything
+             (!ret[0].private && ret[0].published) || // public and published
+             (req.auth.isAuthenticated && ret[0].private && ret[0].published) // also show authorized, private, published
+           ) {
             return res(ret[0]);
           } else {
             return res(Boom.unauthorized('Not authorized to perform this action'));
@@ -263,7 +280,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         })
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not find data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not find data'));
         });
     }
   });
@@ -278,7 +295,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const roles = req.auth.credentials.roles;
 
       if (roles.indexOf('edit') === -1) {
-        return res(Boom.unauthorized('Not authorized to perform this action'))
+        return res(Boom.unauthorized('Not authorized to perform this action'));
       }
 
       return db('indicators')
@@ -287,15 +304,15 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .update({
           name: data.name,
           private: data.private || false,
+          published: data.published || false,
           updated_at: db.fn.now(),
           data: data
         })
         .then((ret) => res({id: ret[0]}))
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not update data'))
+          return res(Boom.badImplementation('Internal Server Error - Could not update data'));
         });
-      ;
     }
   });
 
@@ -308,7 +325,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const roles = req.auth.credentials.roles;
 
       if (roles.indexOf('edit') === -1) {
-        return res(Boom.unauthorized('Not authorized to perform this action'))
+        return res(Boom.unauthorized('Not authorized to perform this action'));
       }
 
       return db('indicators')
@@ -317,14 +334,13 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .then((ret) => res({id: req.params.id}))
         .catch(function (err) {
           console.error(err);
-          return res(Boom.badImplementation('Internal Server Error - Could not delete data'))
-        })
+          return res(Boom.badImplementation('Internal Server Error - Could not delete data'));
+        });
     }
-  })
-
+  });
 });
 
 server.start((err) => {
-  if (err) { throw err}
+  if (err) { throw err; }
   console.log(`Server running at: ${server.info.uri}`);
 });
