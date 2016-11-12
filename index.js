@@ -20,7 +20,7 @@ const db = require('knex')(config);
 server.connection({port: process.env.PORT});
 
 server.register(require('hapi-auth-jwt2'), function (err) {
-  console.error(err);
+  if (err) console.error(err);
   server.auth.strategy('jwt', 'jwt', {
     key: new Buffer(process.env.AUTH0_SECRET, 'base64'),
     validateFunc: function (decoded, request, callback) {
