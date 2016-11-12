@@ -9,9 +9,9 @@ test.before(t => {
 });
 
 test('get all projects', t => {
-  server.injectThen('/projects')
+  return server.injectThen('/projects')
     .then((res) => {
       console.log(res);
-      t.pass();
+      t.fail();
     });
 });
