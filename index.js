@@ -337,9 +337,11 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   });
 });
 
-server.start((err) => {
-  if (err) { throw err; }
-  console.log(`Server running at: ${server.info.uri}`);
-});
+if (environment !== 'test') {
+  server.start((err) => {
+    if (err) { throw err; }
+    console.log(`Server running at: ${server.info.uri}`);
+  });
+}
 
 module.exports = server;
