@@ -1,6 +1,9 @@
 const Hapi = require('hapi');
 const Boom = require('boom');
 
+const environment = process.env.NODE_ENV || 'development';
+const config = require('./knexfile.js')[environment];
+
 const server = new Hapi.Server({
   connections: {
     routes: {
@@ -12,13 +15,7 @@ const server = new Hapi.Server({
   }
 });
 
-const db = require('knex')({
-  client: 'pg',
-  connection: process.env.DATABASE_URL,
-  migrations: {
-    tableName: 'migrations'
-  }
-});
+const db = require('knex')(config);
 
 server.connection({port: process.env.PORT});
 
