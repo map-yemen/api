@@ -1,8 +1,8 @@
 const test = require('ava');
 // var tokens = require('./fixtures/tokens');
 const config = require('../knexfile.js')['test'];
-const server = require('../').server;
-const db = require('../').db;
+const server = require('../server').server;
+const db = require('../server').db;
 
 test.before(t => {
   server.register(require('inject-then'), function (err) {
