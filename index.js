@@ -51,7 +51,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       }
     },
     handler: function (req, res) {
-      const roles = req.auth.credentials.roles;
+      const roles = req.auth.credentials && req.auth.credentials.roles || [];
       const query = db('projects')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'category\' as categories'),
@@ -120,7 +120,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .select()
         .where('id', req.params.id)
         .then(ret => {
-          const roles = req.auth.credentials.roles;
+          const roles = req.auth.credentials && req.auth.credentials.roles || [];
           if (roles.indexOf('edit') > -1 || // edit access can see everything
              (!ret[0].private && ret[0].published) || // public and published
              (req.auth.isAuthenticated && ret[0].private && ret[0].published) // also show authorized, private, published
@@ -201,7 +201,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       }
     },
     handler: function (req, res) {
-      const roles = req.auth.credentials.roles;
+      const roles = req.auth.credentials && req.auth.credentials.roles || [];
       const query = db('indicators')
         .select('id', 'name', 'created_at', 'updated_at');
 
@@ -268,7 +268,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
         .select()
         .where('id', req.params.id)
         .then(ret => {
-          const roles = req.auth.credentials.roles;
+          const roles = req.auth.credentials && req.auth.credentials.roles || [];
           if (roles.indexOf('edit') > -1 || // edit access can see everything
              (!ret[0].private && ret[0].published) || // public and published
              (req.auth.isAuthenticated && ret[0].private && ret[0].published) // also show authorized, private, published
