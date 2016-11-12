@@ -16,6 +16,7 @@ const server = new Hapi.Server({
 });
 
 const db = require('knex')(config);
+module.exports.db = db;
 
 server.connection({port: process.env.PORT});
 
@@ -344,4 +345,4 @@ if (environment !== 'test') {
   });
 }
 
-module.exports = server;
+module.exports.server = server;

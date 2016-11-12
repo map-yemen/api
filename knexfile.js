@@ -5,7 +5,7 @@ module.exports = {
     client: 'pg',
     connection: 'postgres://localhost/map_egypt_test',
     migrations: {
-      tableName: 'migrations'
+      directory: path.join(__dirname, '/migrations')
     },
     seeds: {
       directory: path.join(__dirname, '/seeds')
@@ -16,6 +16,7 @@ module.exports = {
     connection: process.env.DATABASE_URL,
     migrations: {
       tableName: 'migrations'
-    }
+    },
+    debug: true
   }
 };
