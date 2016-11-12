@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "AUTH0_SECRET='secret' NODE_ENV='test' ava test/index.js"
   },
   "keywords": [],
   "author": "",
