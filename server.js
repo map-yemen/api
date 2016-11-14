@@ -73,7 +73,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const data = req.payload;
       const owner = req.auth.credentials.sub;
       const roles = req.auth.credentials.roles;
-      const name = data.name;
+      const name = data && data.name;
 
       if (!owner || !data || !name) {
         return res(Boom.badData('Bad data'));
@@ -221,7 +221,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const data = req.payload;
       const owner = req.auth.credentials.sub;
       const roles = req.auth.credentials.roles;
-      const name = data.name;
+      const name = data && data.name;
 
       if (!owner || !data || !name) {
         return res(Boom.badData('Bad data'));
@@ -337,5 +337,4 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   });
 });
 
-module.exports.db = db;
-module.exports.server = server;
+module.exports = server;
