@@ -1,6 +1,6 @@
 const test = require('ava');
 
-const server = require('../server');
+const server = require('../../server');
 
 test.before(t => {
   server.register(require('inject-then'), function (err) {
