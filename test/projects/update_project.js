@@ -17,20 +17,20 @@ test.after(t => {
   });
 });
 
-test('update a non-existent task, no token', t => {
+test('update a project, no token', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.notFound}`,
+    url: `/projects/${uuid.public.published}`,
     payload: {}
   }).then((res) => {
     t.is(res.statusCode, 401, 'Status code is 401');
   });
 });
 
-test('update a non-existent task, user token', t => {
+test('update a non-existent project, user token', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.notFound}`,
+    url: `/projects/${uuid.public.published}`,
     credentials: {},
     payload: {}
   }).then((res) => {
@@ -38,7 +38,7 @@ test('update a non-existent task, user token', t => {
   });
 });
 
-test('update a non-existent task, admin token', t => {
+test('update a non-existent project, admin token', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/projects/${uuid.notFound}`,
@@ -51,7 +51,7 @@ test('update a non-existent task, admin token', t => {
   });
 });
 
-test('update a task, no payload', t => {
+test('update a project, no payload', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/projects/${uuid.public.draft}`,
@@ -63,7 +63,7 @@ test('update a task, no payload', t => {
   });
 });
 
-test('update a task, correctly', t => {
+test('update a project, correctly', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/projects/${uuid.public.draft}`,
