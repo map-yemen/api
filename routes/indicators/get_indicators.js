@@ -1,10 +1,10 @@
-const db = require('../db');
+const db = require('../../db');
 
 module.exports = [
   {
-    /* Get all projects */
+  /* Get all indicators */
     method: 'GET',
-    path: '/projects',
+    path: '/indicators',
     config: {
       auth: {
         mode: 'optional'
@@ -12,10 +12,8 @@ module.exports = [
     },
     handler: function (req, res) {
       const roles = req.auth.credentials && req.auth.credentials.roles || [];
-      const query = db('projects')
-        .select('id', 'name', 'created_at', 'updated_at',
-          db.raw('data->\'category\' as categories'),
-          db.raw('data->\'location\' as location'));
+      const query = db('indicators')
+        .select('id', 'name', 'created_at', 'updated_at');
 
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).where('published', true).then(res);

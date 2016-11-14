@@ -1,12 +1,12 @@
 const Boom = require('boom');
 
-const db = require('../db');
+const db = require('../../db');
 
 module.exports = [
   {
-    /* Create a new project */
+    /* Create a new indicator */
     method: 'POST',
-    path: '/projects',
+    path: '/indicators',
     config: {auth: 'jwt'},
     handler: function (req, res) {
       const data = req.payload;
@@ -22,7 +22,7 @@ module.exports = [
         return res(Boom.badData('Bad data'));
       }
 
-      return db('projects')
+      return db('indicators')
         .returning('id')
         .insert({
           data: data,
