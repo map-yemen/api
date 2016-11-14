@@ -11,26 +11,26 @@ test.before(t => {
 });
 
 test.after(t => {
-  return db('projects').where('id', uuid.public.draft).update({
+  return db('indicators').where('id', uuid.public.draft).update({
     data: {},
     updated_at: null
   });
 });
 
-test('update a project, no token', t => {
+test('update an indicator, no token', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.public.published}`,
+    url: `/indicators/${uuid.public.published}`,
     payload: {}
   }).then((res) => {
     t.is(res.statusCode, 401, 'Status code is 401');
   });
 });
 
-test('update a project, user token', t => {
+test('update an indicator, user token', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.public.published}`,
+    url: `/indicators/${uuid.public.published}`,
     credentials: {},
     payload: {}
   }).then((res) => {
@@ -38,10 +38,10 @@ test('update a project, user token', t => {
   });
 });
 
-test('update a non-existent project, admin token', t => {
+test('update a non-existent indicator, admin token', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.notFound}`,
+    url: `/indicators/${uuid.notFound}`,
     credentials: {
       roles: ['edit']
     },
@@ -51,10 +51,10 @@ test('update a non-existent project, admin token', t => {
   });
 });
 
-test('update a project, no payload', t => {
+test('update a indicator, no payload', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.public.draft}`,
+    url: `/indicators/${uuid.public.draft}`,
     credentials: {
       roles: ['edit']
     }
@@ -63,10 +63,10 @@ test('update a project, no payload', t => {
   });
 });
 
-test('update a project, correctly', t => {
+test('update a indicator, correctly', t => {
   return server.injectThen({
     method: 'PUT',
-    url: `/projects/${uuid.public.draft}`,
+    url: `/indicators/${uuid.public.draft}`,
     credentials: {
       roles: ['edit']
     },
@@ -76,6 +76,6 @@ test('update a project, correctly', t => {
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
     t.true(res.result.id === uuid.public.draft,
-      'The correct project is returned');
+      'The correct indicator is returned');
   });
 });
