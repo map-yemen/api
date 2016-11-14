@@ -30,7 +30,7 @@ module.exports = [
           data: data
         }).then((ret) => {
           if (ret.length === 0) {
-            return res(Boom.notFound('Could not find the requested project'));
+            return res(Boom.notFound('Could not find the requested indicator'));
           }
           return res({id: ret[0]});
         }).catch(function (err) {
