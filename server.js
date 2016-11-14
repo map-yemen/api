@@ -75,12 +75,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const roles = req.auth.credentials.roles;
       const name = data && data.name;
 
-      if (!owner || !data || !name) {
-        return res(Boom.badData('Bad data'));
-      }
-
       if (roles.indexOf('edit') === -1) {
         return res(Boom.unauthorized('Not authorized to perform this action'));
+      }
+
+      if (!owner || !data || !name) {
+        return res(Boom.badData('Bad data'));
       }
 
       return db('projects')
@@ -223,12 +223,12 @@ server.register(require('hapi-auth-jwt2'), function (err) {
       const roles = req.auth.credentials.roles;
       const name = data && data.name;
 
-      if (!owner || !data || !name) {
-        return res(Boom.badData('Bad data'));
-      }
-
       if (roles.indexOf('edit') === -1) {
         return res(Boom.unauthorized('Not authorized to perform this action'));
+      }
+
+      if (!owner || !data || !name) {
+        return res(Boom.badData('Bad data'));
       }
 
       return db('indicators')
