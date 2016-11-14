@@ -10,7 +10,7 @@ test.before(t => {
 });
 
 test.after(t => {
-  db('projects').where('owner', 'test').del();
+  return db('projects').where('owner', 'test').del();
 });
 
 test('create a project, no token', t => {
@@ -49,7 +49,7 @@ test('create a project, admin token, no data', t => {
   });
 });
 
-test('create a project, admin token', t => {
+test.serial('create a project, admin token', t => {
   return server.injectThen({
     method: 'POST',
     url: '/projects',
@@ -63,5 +63,22 @@ test('create a project, admin token', t => {
     }
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
+  });
+});
+
+test.serial('create duplicate project', t => {
+  return server.injectThen({
+    method: 'POST',
+    url: '/projects',
+    credentials: {
+      sub: 'test',
+      roles: ['edit']
+    },
+    payload: {
+      name: 'test create',
+      data: {}
+    }
+  }).then((res) => {
+    t.is(res.statusCode, 500, 'Status code is 500');
   });
 });
