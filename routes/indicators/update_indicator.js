@@ -28,9 +28,12 @@ module.exports = [
           published: data.published,
           updated_at: db.fn.now(),
           data: data
-        })
-        .then((ret) => res({id: ret[0]}))
-        .catch(function (err) {
+        }).then((ret) => {
+          if (ret.length === 0) {
+            return res(Boom.notFound('Could not find the requested project'));
+          }
+          return res({id: ret[0]});
+        }).catch(function (err) {
           console.error(err);
           return res(Boom.badImplementation('Internal Server Error - Could not update data'));
         });
