@@ -1,4 +1,4 @@
-const server = require('./server').server;
+const server = require('./server');
 
 server.start((err) => {
   if (err) { throw err; }
