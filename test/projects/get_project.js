@@ -21,7 +21,7 @@ test('get a public and published project, no token', t => {
     .then((res) => {
       t.is(res.statusCode, 200, 'Status code is 200');
       t.true(res.result.name === 'public and published' &&
-      res.result.id === '01ca50c2-0d69-4bd3-90b6-979ad38b1ee7',
+      res.result.id === uuid.public.published,
       'The correct project is returned');
     });
 });
@@ -38,4 +38,42 @@ test('get a public and draft project, no token', t => {
     .then((res) => {
       t.is(res.statusCode, 401, 'Status code is 401');
     });
+});
+
+test('get a private and published project, user token', t => {
+  return server.injectThen({
+    method: 'GET',
+    url: `/projects/${uuid.private.published}`,
+    credentials: {}
+  }).then((res) => {
+    t.is(res.statusCode, 200, 'Status code is 200');
+    t.true(res.result.name === 'private and published' &&
+    res.result.id === uuid.private.published,
+    'The correct project is returned');
+  });
+});
+
+test('get a public and draft project, user token', t => {
+  return server.injectThen({
+    method: 'GET',
+    url: `/projects/${uuid.public.draft}`,
+    credentials: {}
+  }).then((res) => {
+    t.is(res.statusCode, 401, 'Status code is 401');
+  });
+});
+
+test('admin can get anything', t => {
+  return server.injectThen({
+    method: 'GET',
+    url: `/projects/${uuid.private.draft}`,
+    credentials: {
+      roles: ['edit']
+    }
+  }).then((res) => {
+    t.is(res.statusCode, 200, 'Status code is 200');
+    t.true(res.result.name === 'private and draft' &&
+    res.result.id === uuid.private.draft,
+    'The correct project is returned');
+  });
 });
