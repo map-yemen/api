@@ -10,10 +10,13 @@ module.exports = [
     config: {auth: 'jwt'},
     handler: function (req, res) {
       const data = req.payload;
-      const roles = req.auth.credentials.roles;
+      const roles = req.auth.credentials.roles || [];
 
       if (roles.indexOf('edit') === -1) {
         return res(Boom.unauthorized('Not authorized to perform this action'));
+      }
+      if (!data) {
+        return res(Boom.badData('Bad data'));
       }
 
       return db('indicators')
@@ -21,8 +24,8 @@ module.exports = [
         .returning('id')
         .update({
           name: data.name,
-          private: data.private || false,
-          published: data.published || false,
+          private: data.private,
+          published: data.published,
           updated_at: db.fn.now(),
           data: data
         })
