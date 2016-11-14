@@ -1,20 +1,11 @@
 const test = require('ava');
 
-const config = require('../knexfile.js')['test'];
-const server = require('../server').server;
-const db = require('../server').db;
+const server = require('../server');
 
 test.before(t => {
   server.register(require('inject-then'), function (err) {
     if (err) throw err;
   });
-});
-
-test.before(t => {
-  return db.migrate.latest(config)
-    .then(() => {
-      return db.seed.run(config);
-    });
 });
 
 test('get all projects, no token', t => {
