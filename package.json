@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start",
-    "test": "AUTH0_SECRET='secret' NODE_ENV='test' ava test -c 1"
+    "test": "AUTH0_SECRET='secret' NODE_ENV='test' nyc ava test"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,8 @@
     "eslint": "^3.10.0",
     "foreman": "^2.0.0",
     "inject-then": "^2.0.7",
-    "jsonwebtoken": "^7.1.9"
+    "jsonwebtoken": "^7.1.9",
+    "nyc": "^8.4.0"
   },
   "engines": {
     "node": "6.5.0"
