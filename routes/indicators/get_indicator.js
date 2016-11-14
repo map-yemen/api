@@ -17,6 +17,10 @@ module.exports = [
         .select()
         .where('id', req.params.id)
         .then(ret => {
+          if (ret.length === 0) {
+            return res(Boom.notFound('Could not find the requested indicator'));
+          }
+
           const roles = req.auth.credentials && req.auth.credentials.roles || [];
           if (roles.indexOf('edit') > -1 || // edit access can see everything
              (!ret[0].private && ret[0].published) || // public and published
