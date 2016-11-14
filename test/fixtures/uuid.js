@@ -7,5 +7,6 @@ module.exports = {
     published: 'b96f6594-3130-4e8c-a397-ff4d50ea59f6',
     draft: 'e65d13b0-0e8c-43da-91ad-5676e02fe77d'
   },
-  notFound: 'e65da3b0-0e8c-43da-91ad-5676e02fe77d'
+  notFound: 'e65da3b0-0e8c-43da-91ad-5676e02fe77d',
+  delete: '344ec277-466f-4657-8656-df159ede37ab'
 };
