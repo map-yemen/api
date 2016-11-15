@@ -23,6 +23,6 @@
 
 ### Authorization
 
-Authorization is acheived via providing your token in a request header:
+To access certain routes, a valid JSON Web Token must be provided in the request header:
 
     Authorization=[TOKEN]
