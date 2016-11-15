@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "AUTH0_SECRET='secret' NODE_ENV='test' nyc ava test"
   },
   "keywords": [],
   "author": "",
@@ -14,12 +14,16 @@
     "boom": "^4.2.0",
     "hapi": "^15.1.1",
     "hapi-auth-jwt2": "^7.1.3",
+    "hapi-router": "^3.5.0",
     "knex": "^0.12.6",
     "pg": "^6.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.0",
-    "foreman": "^2.0.0"
+    "ava": "^0.16.0",
+    "eslint": "^3.10.0",
+    "foreman": "^2.0.0",
+    "inject-then": "^2.0.7",
+    "nyc": "^8.4.0"
   },
   "engines": {
     "node": "6.5.0"
