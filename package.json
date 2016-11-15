@@ -23,7 +23,6 @@
     "eslint": "^3.10.0",
     "foreman": "^2.0.0",
     "inject-then": "^2.0.7",
-    "jsonwebtoken": "^7.1.9",
     "nyc": "^8.4.0"
   },
   "engines": {
