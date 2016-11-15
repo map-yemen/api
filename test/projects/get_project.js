@@ -44,6 +44,7 @@ test('get a private and published project, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: `/projects/${uuid.private.published}`,
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
@@ -57,6 +58,7 @@ test('get a public and draft project, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: `/projects/${uuid.public.draft}`,
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 401, 'Status code is 401');

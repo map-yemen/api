@@ -31,6 +31,7 @@ test('update an indicator, user token', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/indicators/${uuid.public.published}`,
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {},
     payload: {}
   }).then((res) => {
@@ -51,7 +52,7 @@ test('update a non-existent indicator, admin token', t => {
   });
 });
 
-test('update a indicator, no payload', t => {
+test('update an indicator, no payload', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/indicators/${uuid.public.draft}`,
@@ -63,7 +64,7 @@ test('update a indicator, no payload', t => {
   });
 });
 
-test('update a indicator, correctly', t => {
+test('update an indicator, correctly', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/indicators/${uuid.public.draft}`,

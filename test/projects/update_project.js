@@ -31,6 +31,7 @@ test('update a project, user token', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/projects/${uuid.public.published}`,
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {},
     payload: {}
   }).then((res) => {

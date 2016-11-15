@@ -22,6 +22,7 @@ test('get all indicators, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: '/indicators',
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');

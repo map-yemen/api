@@ -22,6 +22,7 @@ test('get all projects, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: '/projects',
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');

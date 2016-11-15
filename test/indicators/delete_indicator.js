@@ -31,6 +31,7 @@ test('delete an indicator, user token', t => {
   return server.injectThen({
     method: 'DELETE',
     url: `/indicators/${uuid.delete}`,
+    // empty credentials auhthenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 401, 'Status code is 401');
