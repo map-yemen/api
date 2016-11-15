@@ -20,9 +20,8 @@ test('get a public and published indicator, no token', t => {
   return server.injectThen(`/indicators/${uuid.public.published}`)
     .then((res) => {
       t.is(res.statusCode, 200, 'Status code is 200');
-      t.true(res.result.name === 'public and published' &&
-      res.result.id === uuid.public.published,
-      'The correct indicator is returned');
+      t.true(res.result.id === uuid.public.published,
+        'The correct indicator is returned');
     });
 });
 
@@ -44,13 +43,12 @@ test('get a private and published indicator, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: `/indicators/${uuid.private.published}`,
-    // empty credentials auhthenticate the request with no additional permissions
+    // empty credentials authenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
-    t.true(res.result.name === 'private and published' &&
-    res.result.id === uuid.private.published,
-    'The correct indicator is returned');
+    t.true(res.result.id === uuid.private.published,
+      'The correct indicator is returned');
   });
 });
 
@@ -58,7 +56,7 @@ test('get a public and draft indicator, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: `/indicators/${uuid.public.draft}`,
-    // empty credentials auhthenticate the request with no additional permissions
+    // empty credentials authenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 401, 'Status code is 401');
@@ -74,8 +72,7 @@ test('admin can get anything', t => {
     }
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
-    t.true(res.result.name === 'private and draft' &&
-    res.result.id === uuid.private.draft,
-    'The correct indicator is returned');
+    t.true(res.result.id === uuid.private.draft,
+      'The correct indicator is returned');
   });
 });

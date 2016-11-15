@@ -1,6 +1,7 @@
 const test = require('ava');
 
 const server = require('../../server');
+const seeds = require('../fixtures/seed_data');
 
 test.before(t => {
   server.register(require('inject-then'), function (err) {
@@ -13,7 +14,9 @@ test('get all projects, no token', t => {
     .then((res) => {
       t.is(res.statusCode, 200, 'Status code is 200');
       t.true(res.result.every(project => {
-        return project.name === 'public and published';
+        return seeds
+          .filter(seed => !seed.private && seed.published)
+          .find(seed => seed.id === project.id);
       }), 'All projects returned are public and published');
     });
 });
@@ -22,12 +25,14 @@ test('get all projects, user token', t => {
   return server.injectThen({
     method: 'GET',
     url: '/projects',
-    // empty credentials auhthenticate the request with no additional permissions
+    // empty credentials authenticate the request with no additional permissions
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
     t.true(res.result.every(project => {
-      return /published/.test(project.name);
+      return seeds
+        .filter(seed => seed.published)
+        .find(seed => seed.id === project.id);
     }), 'All projects returned are published');
     t.true(res.result.some(project => {
       return project.private;

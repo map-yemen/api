@@ -31,7 +31,7 @@ test('update an indicator, user token', t => {
   return server.injectThen({
     method: 'PUT',
     url: `/indicators/${uuid.public.published}`,
-    // empty credentials auhthenticate the request with no additional permissions
+    // empty credentials authenticate the request with no additional permissions
     credentials: {},
     payload: {}
   }).then((res) => {
