@@ -7,10 +7,5 @@ env:
   global:
     secure: nB8i6eLlseYwa6GdFYKjrlpOKn7bVHvWUlHdrYwT7lzdu0Z6bUgzmRFyCQ6dyOvT7CaHxDcDaTC4i5OJ1LqE3kaCQzIbs4lezwsEG7C4mRQuidd4cR4V6RZucYnc7MAkReZoXsjxENijvjAVpssleZaTi+3iwJm4oB4Lykum6UoeTAmEpThLRhk4P0saFO/+fuY3fUKoGdfgIzbSrSzCZeVxcY1oSMZPF9RtYwmiTytE+lG3MnCjoUvE6ihvLN/S0winRJD8MsVmKd9AzxBLLW/sR4FwvSp1Xt24HX1waTXZukQMt4GJPZMdSKkECw4Ekxdk9wi+KCzKBWRc8FLDtS05hmaBG5c7UaBFpqqw0/qWO+U98c7cW+HPvgtkIsieN5/TFhtJ7V8O0X0oO/ZZtLdsaCDOEJFORDtC8kIOt1zx7HBGiGW7Ae62rpOKjw7FH01XwhRY+VtBdN4HLr1Ug5iMER85wzMd4V5Q0ZKBxk3hC8TMSczu2ablFe51iIBhS2jLGDz6JhEdpD7Tfx8SACjzd1zdW7r4X2dFhH+NhnILrJU+lqooNeBvybSdZukNOrUSndsRWGLTcQlah0GC96gDRR2ZzDGeOMdlCxIu0iabbI7BrncENUeZuYmhaeA3pXu2HSO55x7vc7R6K3AjcFu6bIqoKpyO4RpW2tzLDs4=
 
-before_script:
-  - psql -c 'create database map_egypt_test;' -U postgres
-  - node_modules/.bin/knex migrate:latest --env test
-  - node_modules/.bin/knex seed:run --env test 
-
 script:
   - npm test

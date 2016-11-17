@@ -79,6 +79,6 @@ test.serial('create duplicate indicator', t => {
       data: {}
     }
   }).then((res) => {
-    t.is(res.statusCode, 500, 'Status code is 500');
+    t.is(res.statusCode, 422, 'Status code is 422');
   });
 });

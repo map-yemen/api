@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start",
-    "test": "AUTH0_SECRET='secret' NODE_ENV='test' nyc ava test"
+    "test": "npm run test-up && npm run test-script && npm run test-down",
+    "test-script": "AUTH0_SECRET='secret' NODE_ENV='test' nyc ava test",
+    "test-up": ".build_scripts/create_database.sh",
+    "test-down": ".build_scripts/drop_database.sh"
   },
   "keywords": [],
   "author": "",

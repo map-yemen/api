@@ -36,6 +36,9 @@ module.exports = [
           return res({id: ret[0]});
         })
         .catch(function (err) {
+          if (err.code === '23505') {
+            return res(Boom.badData('Indicator name already exists'))
+          }
           console.error(err);
           return res(Boom.badImplementation('Internal Server Error - Could not add data'));
         });
