@@ -19,7 +19,7 @@ module.exports = [
       }
 
       if (!owner || !data || !name) {
-        return res(Boom.badData('Bad data'));
+        return res(Boom.badData('Missing Form Data'));
       }
 
       return db('projects')
@@ -36,6 +36,10 @@ module.exports = [
           return res({id: ret[0]});
         })
         .catch(function (err) {
+          // Uniqueness violation
+          if (err.code === '23505') {
+            return res(Boom.badData('Project name already exists'))
+          }
           console.error(err);
           return res(Boom.badImplementation('Internal Server Error - Could not add data'));
         });
