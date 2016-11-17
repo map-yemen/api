@@ -76,3 +76,25 @@ test('admin can get anything', t => {
       'The correct project is returned');
   });
 });
+
+test('get a public and published project, no token, find disbursed', t => {
+  return server.injectThen(`/projects/${uuid.disbursed}`)
+    .then((res) => {
+      t.is(res.statusCode, 200, 'Status code is 200');
+      t.false(res.result.data.hasOwnProperty('disbursed'),
+        'Unauthenticated users can\'t see disbursed');
+    });
+});
+
+test('get a public and published project, user token, find disbursed', t => {
+  return server.injectThen({
+    method: 'GET',
+    url: `/projects/${uuid.disbursed}`,
+    // empty credentials authenticate the request with no additional permissions
+    credentials: {}
+  }).then((res) => {
+    t.is(res.statusCode, 200, 'Status code is 200');
+    t.true(res.result.data.hasOwnProperty('disbursed'),
+      'Authenticated users can see disbursed');
+  });
+});
