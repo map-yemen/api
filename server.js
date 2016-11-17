@@ -18,11 +18,7 @@ server.register(require('hapi-auth-jwt2'), function (err) {
   server.auth.strategy('jwt', 'jwt', {
     key: new Buffer(process.env.AUTH0_SECRET, 'base64'),
     validateFunc: function (decoded, request, callback) {
-      if (decoded) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
+      callback(null, true);
     },
     verifyOptions: {
       algorithms: ['HS256'],
