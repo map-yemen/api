@@ -42,4 +42,4 @@ To access certain routes, a valid JSON Web Token must be provided in the request
 
 - Clone this repo
 - `yarn` to install dependencies
-- `npm test` to run the tests
+- `yarn test` to run the tests
