@@ -5,7 +5,7 @@ const server = new Hapi.Server({
     routes: {
       cors: {
         origin: ['*'],
-        additionalHeaders: ['x-requested-with']
+        additionalHeaders: ['x-requested-with', 'accept-language']
       }
     }
   }
