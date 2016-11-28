@@ -15,6 +15,9 @@ module.exports = [
       const query = db('projects')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'category\' as categories'),
+          db.raw('data->\'budget\' as budget'),
+          db.raw('data->\'planned_start_date\' as planned_start_date'),
+          db.raw('data->\'actual_start_date\' as actual_start_date'),
           db.raw('data->\'planned_end_date\' as planned_end_date'),
           db.raw('data->\'actual_end_date\' as actual_end_date'),
           db.raw('data->\'location\' as location'));
