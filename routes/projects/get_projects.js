@@ -20,6 +20,10 @@ module.exports = [
           db.raw('data->\'actual_start_date\' as actual_start_date'),
           db.raw('data->\'planned_end_date\' as planned_end_date'),
           db.raw('data->\'actual_end_date\' as actual_end_date'),
+          db.raw('data->\'sds_indicators\' as sds_indicators'),
+          db.raw('data->\'description\' as description'),
+          db.raw('data->\'description_ar\' as description_ar'),
+          db.raw('data->\'number_served\' as number_served'),
           db.raw('data->\'location\' as location'));
 
       if (!req.auth.isAuthenticated) {
