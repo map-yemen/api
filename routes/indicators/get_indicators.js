@@ -13,7 +13,10 @@ module.exports = [
     handler: function (req, res) {
       const roles = req.auth.credentials && req.auth.credentials.roles || [];
       const query = db('indicators')
-        .select('id', 'name', 'created_at', 'updated_at');
+        .select('id', 'name', 'created_at', 'updated_at',
+          db.raw('data->\'theme\' as theme'),
+          db.raw('data->\'type\' as type')
+        );
 
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).where('published', true).then(res);
