@@ -15,7 +15,7 @@ module.exports = [
       const query = db('indicators')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'theme\' as theme'),
-          db.raw('data->\'type\' as type')
+          db.raw('data->\'indicator_type\' as type')
         );
 
       if (!req.auth.isAuthenticated) {
