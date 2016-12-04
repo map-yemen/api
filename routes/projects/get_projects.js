@@ -21,6 +21,7 @@ module.exports = [
           db.raw('data->\'planned_end_date\' as planned_end_date'),
           db.raw('data->\'actual_end_date\' as actual_end_date'),
           db.raw('data->\'sds_indicator\' as sds_indicators'),
+          db.raw('data->\'sdg_indicator\' as sdg_indicators'),
           db.raw('data->\'description\' as description'),
           db.raw('data->\'description_ar\' as description_ar'),
           db.raw('data->\'number_served\' as number_served'),
