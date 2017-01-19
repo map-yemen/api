@@ -14,8 +14,8 @@ module.exports = [
       const roles = req.auth.credentials && req.auth.credentials.roles || [];
       const query = db('indicators')
         .select('id', 'name', 'created_at', 'updated_at',
-          db.raw('data->\'theme\' as theme'),
-          db.raw('data->\'indicator_type\' as type')
+          db.raw('data->\'themes\' as theme'),
+          db.raw('data->\'category\' as type')
         );
 
       if (!req.auth.isAuthenticated) {
