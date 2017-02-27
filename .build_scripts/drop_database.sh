@@ -1,1 +1,1 @@
-psql -c 'drop database map_egypt_test;' -U postgres
+psql -c 'drop database map_yemen_test;' -U postgres

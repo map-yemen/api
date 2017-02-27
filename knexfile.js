@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
   test: {
     client: 'pg',
-    connection: 'postgres://localhost/map_egypt_test',
+    connection: 'postgres://localhost/map_yemen_test',
     migrations: {
       directory: path.join(__dirname, '/migrations')
     },
