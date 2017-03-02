@@ -29,7 +29,7 @@ module.exports = [
           db.raw('data->\'number_served\' as number_served'),
           db.raw('data->\'location\' as location'),
           db.raw('data->\'local_manager\' as local_manager'),
-          db.raw('data->\'local_manager_ar\' as local_manager_ar'));
+          db.raw('data->\'local_manager_ar\' as local_manager_ar'),
           db.raw('data->\'status\' as status'));
 
       if (!req.auth.isAuthenticated) {
