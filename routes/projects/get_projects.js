@@ -30,6 +30,7 @@ module.exports = [
           db.raw('data->\'location\' as location'),
           db.raw('data->\'local_manager\' as local_manager'),
           db.raw('data->\'local_manager_ar\' as local_manager_ar'));
+          db.raw('data->\'status\' as status'));
 
       if (!req.auth.isAuthenticated) {
         return query.where('private', false).where('published', true).then(res);
