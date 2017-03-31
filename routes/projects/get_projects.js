@@ -11,9 +11,9 @@ module.exports = [
       }
     },
     handler: function (req, res) {
-      const roles = req.auth.credentials && req.auth.credentials.roles || [];
+      const roles = (req.auth.credentials && req.auth.credentials.roles) || [];
       const query = db('projects')
-        .select('id', 'name', 'created_at', 'updated_at',
+        .select('id', 'name', 'owner', 'created_at', 'updated_at',
           db.raw('data->\'name_ar\' as name_ar'),
           db.raw('data->\'category\' as categories'),
           db.raw('data->\'responsible_ministry\' as responsible_ministry'),
