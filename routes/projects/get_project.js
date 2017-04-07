@@ -29,7 +29,11 @@ module.exports = [
             const response = ret[0];
             // secondary authentication check for removing disbursement data for non-logged in users
             if (!req.auth.isAuthenticated && response.data) {
-              delete response.data.disbursed;
+              if (response.data.disbursed) {
+                response.data.disbursed.forEach((disbursement) => {
+                  delete disbursement['donor_name'];
+                })
+              }
             }
             return res(response);
           } else {

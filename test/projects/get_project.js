@@ -77,16 +77,16 @@ test('admin can get anything', t => {
   });
 });
 
-test('get a public and published project, no token, find disbursed', t => {
+test('get a public and published project, no token, find disbursed donor_name', t => {
   return server.injectThen(`/projects/${uuid.disbursed}`)
     .then((res) => {
       t.is(res.statusCode, 200, 'Status code is 200');
-      t.false(res.result.data.hasOwnProperty('disbursed'),
-        'Unauthenticated users can\'t see disbursed');
+      t.false(res.result.data.disbursed[0].hasOwnProperty('donor_name'),
+        'Unauthenticated users can\'t see disbursed donor_name');
     });
 });
 
-test('get a public and published project, user token, find disbursed', t => {
+test('get a public and published project, user token, find disbursed donor_name', t => {
   return server.injectThen({
     method: 'GET',
     url: `/projects/${uuid.disbursed}`,
@@ -94,7 +94,7 @@ test('get a public and published project, user token, find disbursed', t => {
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
-    t.true(res.result.data.hasOwnProperty('disbursed'),
-      'Authenticated users can see disbursed');
+    t.true(res.result.data.disbursed[0].hasOwnProperty('donor_name'),
+      'Authenticated users can see disbursed donor_name');
   });
 });
