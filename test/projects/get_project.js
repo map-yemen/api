@@ -81,8 +81,8 @@ test('get a public and published project, no token, find disbursed donor_name', 
   return server.injectThen(`/projects/${uuid.disbursed}`)
     .then((res) => {
       t.is(res.statusCode, 200, 'Status code is 200');
-      t.false(res.result.data.disbursed[0].hasOwnProperty('donor_name'),
-        'Unauthenticated users can\'t see disbursed donor_name');
+      t.deepEqual(res.result.data.disbursed, [{amount:1000000}],
+        'Unauthenticated users can\'t see disbursed donor_name, should see amount');
     });
 });
 
@@ -94,7 +94,7 @@ test('get a public and published project, user token, find disbursed donor_name'
     credentials: {}
   }).then((res) => {
     t.is(res.statusCode, 200, 'Status code is 200');
-    t.true(res.result.data.disbursed[0].hasOwnProperty('donor_name'),
+    t.deepEqual(res.result.data.disbursed, [{amount:1000000, donor_name:'seed'}],
       'Authenticated users can see disbursed donor_name');
   });
 });
