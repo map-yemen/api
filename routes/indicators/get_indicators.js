@@ -11,12 +11,14 @@ module.exports = [
       }
     },
     handler: function (req, res) {
-      const roles = req.auth.credentials && req.auth.credentials.roles || [];
+      const roles = (req.auth.credentials && req.auth.credentials.roles) || [];
       const query = db('indicators')
         .select('id', 'name', 'created_at', 'updated_at',
           db.raw('data->\'themes\' as theme'),
           db.raw('data->\'category\' as type'),
+          db.raw('data->\'name_ar\' as name_ar'),
           db.raw('data->\'description\' as description'),
+          db.raw('data->\'description_ar\' as description_ar'),
           db.raw('data->\'sources\' as sources')
         );
 
